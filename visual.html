@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="author" content="Marina Perona, Celia Puga" />
+  <title>MISSILE COMMAND</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Le ponemos estilo a la pagina -->
+  <style>
+    body {
+      background: #c67b99;      
+      margin: 0;
+      font-family: Inter, system-ui, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 18px;
+      color: #5a033a;           
+    }
+
+    h1,h2{margin:0; text-shadow: 0 2px 8px rgba(0,0,0,0.6)}
+    .controls{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      background: var(--panel-bg);
+      padding:8px 12px;
+      border-radius:10px;
+      backdrop-filter: blur(4px);
+    }
+  </style>
+</head>
+<body>
+    <h1>MISSILE COMMAND</h1>
+    <h2>Hecho por Celia Puga y Marina Perona</h2>
+    <canvas id="juegoCanvas"></canvas>
+    <script src="juego.js"></script>
+</body>
+</html>
