@@ -10,6 +10,8 @@ let lastTime = 0;
 let ciudades = [];
 //creamos donde se almacenan los misiles enemigos
 let misilesEnemigos = [];
+//creamos los cañones
+let canones = [];
 
 //creamos las funcion que inicializara todos los elementos
 function inicializar(){
@@ -20,10 +22,12 @@ function inicializar(){
     }
 
     //añadimos un misil enemigo de prueba
-
     misilesEnemigos.push(
     new MisilEnemigo(400, 0, 400, canvas.height - 20)
 );
+
+    //creamos los cañones y los añadimos al array
+    canones.push(new Canon(canvas.width/2, canvas.height - 20));
 
 }
 
@@ -59,10 +63,15 @@ function actualizar(dt){
     for (let i = 0; i < misilesEnemigos.length; i++) {
     if (misilesEnemigos[i].estado) {
         misilesEnemigos[i].actualizar(dt);
+        }
     }
-}
 
-
+    //actualizamos los cañones
+    for(let i = 0; i<canones.length; i++){
+    if (canones[i].estado==true){
+        canones[i].actualizar(dt);
+        }  
+    }
 }
 
 function dibujar(){
@@ -82,8 +91,13 @@ function dibujar(){
     if (misilesEnemigos[i].estado == true) {
         misilesEnemigos[i].dibujar();
     }
-}
-
+    }
+    //dibujamos los cañones
+    for(let i = 0; i<canones.length; i++){
+        if (canones[i].estado==true){
+            canones[i].dibujar();   
+    }   
+    }
 }
 //inicializamos el juego
 requestAnimationFrame(buclePrincipal);
