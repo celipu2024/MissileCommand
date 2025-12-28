@@ -8,6 +8,8 @@ canvas.height = 600;
 let lastTime = 0;
 //creamos donde se almacenan las ciudades
 let ciudades = [];
+//creamos donde se almacenan los misiles enemigos
+let misilesEnemigos = [];
 
 //creamos las funcion que inicializara todos los elementos
 function inicializar(){
@@ -16,6 +18,13 @@ function inicializar(){
     for(let i = 1; i<=6; i++){
         ciudades.push(new Ciudad(i*separacionCiudades, canvas.height -20));
     }
+
+    //añadimos un misil enemigo de prueba
+
+    misilesEnemigos.push(
+    new MisilEnemigo(400, 0, 400, canvas.height - 20)
+);
+
 }
 
 
@@ -46,10 +55,18 @@ function actualizar(dt){
             ciudades[i].actualizar(dt);
         }
     }
+    //actualizamos los misiles enemigos
+    for (let i = 0; i < misilesEnemigos.length; i++) {
+    if (misilesEnemigos[i].estado) {
+        misilesEnemigos[i].actualizar(dt);
+    }
+}
+
+
 }
 
 function dibujar(){
-    //Limpiamos el canvas en cada frame
+   //Limpiamos el canvas en cada frame
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     // Dibujamos el suelo
     ctx.fillStyle = "#A52A2A";
@@ -60,7 +77,13 @@ function dibujar(){
             ciudades[i].dibujar();
         }
     }
+    //dibujamos los misiles enemigos
+    for (let i = 0; i < misilesEnemigos.length; i++) {
+    if (misilesEnemigos[i].estado == true) {
+        misilesEnemigos[i].dibujar();
+    }
 }
 
+}
 //inicializamos el juego
 requestAnimationFrame(buclePrincipal);
