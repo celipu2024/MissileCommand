@@ -4,19 +4,21 @@ class Explosion extends Entidad{
         super(x, y);
         this.radio = 0;
         this.radioMax = 30;
-        this.activa= true;
+        this.creciendo = true;
+        this.velocidad = 0.1;
+        //this.activa= true;
     }
     
     //actualizamos la explosion, de forma que si esta activa
     //crece hasta un radio maximo, y luego decrece hasta desaparecer
     actualizar(dt){ 
-        if(this.activa){
-            this.radio += 0.1 * dt;
+        if(this.creciendo){
+            this.radio += this.velocidad * dt;
             if(this.radio >= this.radioMax){
-                this.estado = false;
+                this.creciendo = false;
             }
         } else {
-            this.radio -= 0.1 * dt; 
+            this.radio -= this.velocidad * dt; 
             if(this.radio <= 0){
                 this.estado = false;
             }
