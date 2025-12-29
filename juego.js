@@ -21,6 +21,7 @@ let explosiones = [];
 let gameOver = false;
 
 canvas.addEventListener("click",function(e){
+    if (gameOver) return;
     //obtenemos la posicion del raton en el canvas
     const rect = canvas.getBoundingClientRect();
     const mouseX = e.clientX - rect.left;
@@ -46,17 +47,28 @@ function dispararDesdeCanonMasCercano(x, y){
 
 //creamos las funcion que inicializara todos los elementos
 function inicializar(){
-    const separacionCiudades = canvas.width / 7;
-    //recorremos el array para añadir la ciudad
-    for(let i = 1; i<=6; i++){
-        ciudades.push(new Ciudad(i*separacionCiudades, canvas.height -20));
-    }
+    const sueloY = canvas.height - 20;
 
+    ciudades = [];
+    canones = [];
+
+    //ancho del cañón (lo usamos para no cortarlo)
+    const anchoCanon = 28;
+    const margenCanon = anchoCanon / 2;
     //creamos los cañones y los añadimos al array
-    canones.push(new Canon(100, canvas.height - 20));
-    canones.push(new Canon(canvas.width / 2, canvas.height - 20));
-    canones.push(new Canon(canvas.width - 100, canvas.height - 20));
+    canones.push(new Canon(margenCanon, sueloY));
+    canones.push(new Canon(canvas.width / 2, sueloY));
+    canones.push(new Canon(canvas.width - margenCanon, sueloY));
+    //ciudades
+    const inicioCiudades = margenCanon + 80;
+    const finCiudades = canvas.width - margenCanon - 80;
+    const espacioTotal = finCiudades - inicioCiudades;
+    const separacion = espacioTotal / 5; // 6 ciudades → 5 espacios
 
+    for (let i = 0; i < 6; i++){
+        const x = inicioCiudades + i * separacion;
+        ciudades.push(new Ciudad(x, sueloY));
+    }
 }
 
 
@@ -124,6 +136,8 @@ function actualizar(dt){
     let ciudadesRestantes = ciudades.some(c => c.estado);
     if (!ciudadesRestantes){
         gameOver = true;
+        //desactivamos los cañones
+        canones.forEach(c => c.estado = false);
     }
 }
 
