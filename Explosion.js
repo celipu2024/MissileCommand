@@ -17,7 +17,7 @@ class Explosion extends Entidad{
             if(this.radio >= this.radioMax){
                 this.creciendo = false;
             }
-        } else {
+        }else{
             this.radio -= this.velocidad * dt; 
             if(this.radio <= 0){
                 this.estado = false;
@@ -29,9 +29,9 @@ class Explosion extends Entidad{
             let m = misilesEnemigos[i];
             let dx = m.x - this.x;
             let dy = m.y - this.y;
-            let distancia = Math.sqrt(dx*dx + dy*dy);
+            let distanciaCuadrada = dx*dx + dy*dy;
 
-            if(distancia < this.radio){
+            if(distanciaCuadrada < this.radio*this.radio){
                 m.estado = false;
             }
         }

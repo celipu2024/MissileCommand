@@ -13,6 +13,7 @@ class Ciudad extends Entidad{
     //comprobacion de si la ciudad esta activa
     }
     dibujar(){
+        if (!this.estado) return;
         ctx.fillStyle = "blue";
         ctx.fillRect(this.x - this.ancho / 2, this.y - this.alto, this.ancho, this.alto);
     }

@@ -5,26 +5,38 @@ class MisilEnemigo extends Entidad{
     constructor(inicioX, inicioY, ciudadDestino){
         super(inicioX, inicioY);
         this.ciudadDestino = ciudadDestino;
-        this.destinoX = ciudadDestino.x;
-        this.destinoY = ciudadDestino.y;
-        this.velocidad = 0.0005;
+        this.velocidad = 0.05;
+
+        let destinoX = ciudadDestino.x - inicioX;
+        let destinoY = ciudadDestino.y - inicioY;
+        let distancia = Math.sqrt(destinoX*destinoX + destinoY*destinoY);
+
+        this.velX = destinoX / distancia;
+        this.velY = destinoY / distancia;
     }
 
 
     actualizar(dt){
         //movemos el misil hacia el destino
-        this.x += (this.destinoX - this.x) * this.velocidad * dt;
-        this.y += (this.destinoY - this.y) * this.velocidad * dt;
+        this.x += this.velX * this.velocidad * dt;
+        this.y += this.velY * this.velocidad * dt;
 
-        if(this.y >= this.destinoY){
-        this.estado = false;
-        this.ciudadDestino.estado = false;
+        let destinoX = this.ciudadDestino.x - this.x;
+        let destinoY = this.ciudadDestino.y - this.y;
+
+        let distanciaCuadrada = destinoX * destinoX + destinoY * destinoY;
+        let radio = this.ciudadDestino.ancho/2;
+
+        if(distanciaCuadrada < radio*radio){
+            //se destruye la ciudad
+            this.ciudadDestino.estado = false;
+            this.estado = false;
         }
     }   
 
     dibujar(){
         //dibujamos el misil como un rectángulo rojo
-        ctx.fillStyle = "red";
+        ctx.strokeStyle = "red";
         ctx.beginPath();
         ctx.moveTo(this.x, this.y);
         ctx.lineTo(this.x, this.y -10);

@@ -6,10 +6,16 @@ class Entidad{
         this.y = y;
         this.estado = true;
     }
+
+    destruir(){
+        this.estado = false;
+    }
+
     /**
      * Actualiza la lógica 
      * @param {number} dt - DeltaTime
      */
+    
     //polimorfismo
     actualizar(dt){}
     dibujar(){}

@@ -67,50 +67,46 @@ function buclePrincipal(timestamp){
 }
 
 function actualizar(dt){
-    //comprobacion de si la ciudad esta activa
-    for (var i = 0; i < ciudades.length; i++) {
-        if (ciudades[i].estado == true) {
+    /*comprobacion de si la ciudad esta activa
+    for (let i = 0; i < ciudades.length; i++) {
+        if (ciudades[i].estado) {
             ciudades[i].actualizar(dt);
         }
-    }
+    }*/
+
     //actualizamos los misiles enemigos
     for (let i = 0; i < misilesEnemigos.length; i++) {
-    if (misilesEnemigos[i].estado) {
         misilesEnemigos[i].actualizar(dt);
-        }
     }
-    misilesEnemigos = misilesEnemigos.filter(m => m.estado);
 
-
-    //actualizamos los cañones
+    /*actualizamos los cañones
     for(let i = 0; i<canones.length; i++){
-    if (canones[i].estado==true){
-        canones[i].actualizar(dt);
+        if (canones[i].estado==true){
+            canones[i].actualizar(dt);
         }  
-    }
+    }*/
 
     //actualizamos los misiles del jugador
     for (let i = 0; i < misilesJugador.length; i++) {
-    if (misilesJugador[i].estado == true) {
         misilesJugador[i].actualizar(dt);
-        }
     }
+
     // eliminamos los misiles del jugador inactivos
-    misilesJugador = misilesJugador.filter(m => m.estado);
 
 
     // actualizamos las explosiones
     for (let i = 0; i < explosiones.length; i++) {
-        if (explosiones[i].estado) {
-            explosiones[i].actualizar(dt);
-        }
+        explosiones[i].actualizar(dt);
     }
-    // eliminamos las explosiones inactivas
+
+    //eliminamos todos los objetos muertos
+    misilesEnemigos = misilesEnemigos.filter(m => m.estado);
+    misilesJugador = misilesJugador.filter(m => m.estado);
     explosiones = explosiones.filter(e => e.estado);
 
 
     //comprobamos si quedan ciudades
-    let ciudadesRestantes = ciudades.some(ciudad => ciudad.estado);
+    let ciudadesRestantes = ciudades.some(c => c.estado);
     if (!ciudadesRestantes){
         gameOver = true;
     }
