@@ -27,6 +27,8 @@ let canones = [];
 let misilesJugador = [];
 //guardamos las explosiones
 let explosiones = [];
+//variable para controlar el game over
+let gameOver = false;
 
 //creamos las funcion que inicializara todos los elementos
 function inicializar(){
@@ -35,11 +37,6 @@ function inicializar(){
     for(let i = 1; i<=6; i++){
         ciudades.push(new Ciudad(i*separacionCiudades, canvas.height -20));
     }
-
-    //añadimos un misil enemigo de prueba
-    misilesEnemigos.push(
-    new MisilEnemigo(400, 0, 400, canvas.height - 20)
-);
 
     //creamos los cañones y los añadimos al array
     canones.push(new Canon(canvas.width/2, canvas.height - 20));
@@ -59,7 +56,9 @@ function buclePrincipal(timestamp){
     let deltaTime = timestamp-lastTime;
     lastTime = timestamp;
     //actualizamos la lógica
+    if(!gameOver){
     actualizar(deltaTime);
+    }
     //dibujamos el juego
     dibujar();
     /*decirle al navegador que estamos preparados para dibujar el siguiente cuadro de la animación y solicitarle que nos avise de cuándo
@@ -80,6 +79,8 @@ function actualizar(dt){
         misilesEnemigos[i].actualizar(dt);
         }
     }
+    misilesEnemigos = misilesEnemigos.filter(m => m.estado);
+
 
     //actualizamos los cañones
     for(let i = 0; i<canones.length; i++){
@@ -94,30 +95,24 @@ function actualizar(dt){
         misilesJugador[i].actualizar(dt);
         }
     }
+    // eliminamos los misiles del jugador inactivos
+    misilesJugador = misilesJugador.filter(m => m.estado);
 
-   let nuevosMisiles = [];
 
-    for(let i = 0; i < misilesJugador.length; i++){
-        if(misilesJugador[i].estado){
-            nuevosMisiles.push(misilesJugador[i]);
+    // actualizamos las explosiones
+    for (let i = 0; i < explosiones.length; i++) {
+        if (explosiones[i].estado) {
+            explosiones[i].actualizar(dt);
         }
     }
+    // eliminamos las explosiones inactivas
+    explosiones = explosiones.filter(e => e.estado);
 
-    misilesJugador = nuevosMisiles;
 
-    //actualizamos las explosiones
-    for (let i = 0; i < explosiones.length; i++) {
-    if (explosiones[i].estado == true) {
-        explosiones[i].actualizar(dt);
-    }
-    //filtramos las explosiones que ya no estan activas
-    let nuevasExplosiones = [];
-    for(let i = 0; i < explosiones.length; i++){
-        if(explosiones[i].estado){
-            nuevasExplosiones.push(explosiones[i]);
-        }   
-    }
-    explosiones = nuevasExplosiones;
+    //comprobamos si quedan ciudades
+    let ciudadesRestantes = ciudades.some(ciudad => ciudad.estado);
+    if (!ciudadesRestantes){
+        gameOver = true;
     }
 }
 
@@ -161,6 +156,28 @@ function dibujar(){
     }
     }
 
+    //dibujamos game over
+    if(gameOver){
+    ctx.fillStyle = "white";
+    ctx.font = "48px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText("GAME OVER", canvas.width/2, canvas.height/2);
+    }
+
 }
+
+//generamos misiles enemigos cada cierto tiempo
+setInterval(() => {
+    if(gameOver) return;
+
+    let ciudad = ciudades[Math.floor(Math.random() * ciudades.length)];
+    if(ciudad.estado){
+        let x = Math.random() * canvas.width;
+        misilesEnemigos.push(new MisilEnemigo(x, 0, ciudad));
+    }
+}, 2000);
+
 //inicializamos el juego
+inicializar();
+//empezamos el bucle principal
 requestAnimationFrame(buclePrincipal);

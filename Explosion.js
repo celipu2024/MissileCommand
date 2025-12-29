@@ -13,7 +13,7 @@ class Explosion extends Entidad{
         if(this.activa){
             this.radio += 0.1 * dt;
             if(this.radio >= this.radioMax){
-                this.activa = false;
+                this.estado = false;
             }
         } else {
             this.radio -= 0.1 * dt; 

@@ -2,22 +2,25 @@
 class MisilEnemigo extends Entidad{
 
 //constructor que recibe la posicion inicial y la posicion destino
-    constructor(inicioX, inicioY,destinoX,destinoY){
-        super(inicioX, inicioY); //llamamos al constructor de la clase padre
-        this.destinoX = destinoX;
-        this.destinoY = destinoY;
-        this.velocidad = 0.5; //pixeles por segundo
+    constructor(inicioX, inicioY, ciudadDestino){
+        super(inicioX, inicioY);
+        this.ciudadDestino = ciudadDestino;
+        this.destinoX = ciudadDestino.x;
+        this.destinoY = ciudadDestino.y;
+        this.velocidad = 0.0005;
     }
+
 
     actualizar(dt){
         //movemos el misil hacia el destino
         this.x += (this.destinoX - this.x) * this.velocidad * dt;
         this.y += (this.destinoY - this.y) * this.velocidad * dt;
 
-          if(this.y >= this.destinoY){
-        this.estado = false; //el misil ha llegado a su destino
-    }
-    }
+        if(this.y >= this.destinoY){
+        this.estado = false;
+        this.ciudadDestino.estado = false;
+        }
+    }   
 
     dibujar(){
         //dibujamos el misil como un rectángulo rojo
