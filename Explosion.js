@@ -1,0 +1,45 @@
+
+class Explosion extends Entidad{
+    constructor(x, y){
+        super(x, y);
+        this.radio = 0;
+        this.radioMax = 30;
+        this.activa= true;
+    }
+    
+    //actualizamos la explosion, de forma que si esta activa
+    //crece hasta un radio maximo, y luego decrece hasta desaparecer
+    actualizar(dt){ 
+        if(this.activa){
+            this.radio += 0.1 * dt;
+            if(this.radio >= this.radioMax){
+                this.activa = false;
+            }
+        } else {
+            this.radio -= 0.1 * dt; 
+            if(this.radio <= 0){
+                this.estado = false;
+            }
+        }
+
+        //comprobamos colisiones con misiles enemigos
+        for(let i = 0; i < misilesEnemigos.length; i++){
+            let m = misilesEnemigos[i];
+            let dx = m.x - this.x;
+            let dy = m.y - this.y;
+            let distancia = Math.sqrt(dx*dx + dy*dy);
+
+            if(distancia < this.radio){
+                m.estado = false;
+            }
+        }
+    }
+
+    dibujar(){
+        ctx.strokeStyle = "orange";
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radio, 0, Math.PI * 2);
+        ctx.stroke();
+    }
+
+}

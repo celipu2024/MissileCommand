@@ -4,6 +4,17 @@ const ctx = canvas.getContext("2d");
 canvas.width = 800;
 canvas.height = 600;
 
+//creamos el raton
+canvas.addEventListener("click", function(event){
+    //obtenemos la posicion del raton en el canvas
+    const rect = canvas.getBoundingClientRect();
+    const mouseX = event.clientX - rect.left;
+    const mouseY = event.clientY - rect.top;
+    //disparamos el cañon
+    canones[0].disparar(mouseX, mouseY);    
+});
+
+
 //timer
 let lastTime = 0;
 //creamos donde se almacenan las ciudades
@@ -12,6 +23,10 @@ let ciudades = [];
 let misilesEnemigos = [];
 //creamos los cañones
 let canones = [];
+//almacenamos los misiles del jugador
+let misilesJugador = [];
+//guardamos las explosiones
+let explosiones = [];
 
 //creamos las funcion que inicializara todos los elementos
 function inicializar(){
@@ -72,7 +87,40 @@ function actualizar(dt){
         canones[i].actualizar(dt);
         }  
     }
+
+    //actualizamos los misiles del jugador
+    for (let i = 0; i < misilesJugador.length; i++) {
+    if (misilesJugador[i].estado == true) {
+        misilesJugador[i].actualizar(dt);
+        }
+    }
+
+   let nuevosMisiles = [];
+
+    for(let i = 0; i < misilesJugador.length; i++){
+        if(misilesJugador[i].estado){
+            nuevosMisiles.push(misilesJugador[i]);
+        }
+    }
+
+    misilesJugador = nuevosMisiles;
+
+    //actualizamos las explosiones
+    for (let i = 0; i < explosiones.length; i++) {
+    if (explosiones[i].estado == true) {
+        explosiones[i].actualizar(dt);
+    }
+    //filtramos las explosiones que ya no estan activas
+    let nuevasExplosiones = [];
+    for(let i = 0; i < explosiones.length; i++){
+        if(explosiones[i].estado){
+            nuevasExplosiones.push(explosiones[i]);
+        }   
+    }
+    explosiones = nuevasExplosiones;
+    }
 }
+
 
 function dibujar(){
    //Limpiamos el canvas en cada frame
@@ -98,6 +146,21 @@ function dibujar(){
             canones[i].dibujar();   
     }   
     }
+
+    //dibujamos los misiles del jugador
+    for (let i = 0; i < misilesJugador.length; i++) {
+    if (misilesJugador[i].estado == true) {
+        misilesJugador[i].dibujar();
+    }
+    }
+
+    //dibujamos las explosiones
+    for (let i = 0; i < explosiones.length; i++) {
+    if (explosiones[i].estado == true) {
+        explosiones[i].dibujar();
+    }
+    }
+
 }
 //inicializamos el juego
 requestAnimationFrame(buclePrincipal);
