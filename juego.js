@@ -20,21 +20,14 @@ let explosiones = [];
 //variable para controlar el game over
 let gameOver = false;
 
-canvas.addEventListener("click", manejaraton, false);
-
-//creamos las funciones del raton
-function manejaraton(e){
-    switch(e.type){
-        case "click":
-        //obtenemos la posicion del raton en el canvas
-        const rect = canvas.getBoundingClientRect();
-        const mouseX = e.clientX - rect.left;
-        const mouseY = e.clientY - rect.top;
-        //disparamos el cañon
-        dispararDesdeCanonMasCercano(mouseX, mouseY);   
-    break;
-    } 
-};
+canvas.addEventListener("click",function(e){
+    //obtenemos la posicion del raton en el canvas
+    const rect = canvas.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    //disparamos el cañon
+    dispararDesdeCanonMasCercano(mouseX, mouseY);   
+});
 
 function dispararDesdeCanonMasCercano(x, y){
     let canon = canones.slice();
@@ -143,16 +136,12 @@ function dibujar(){
     ctx.fillRect(0, canvas.height - 20, canvas.width, 20);
     //dibujamos las ciudades
     ciudades.forEach(c => c.estado && c.dibujar());
-
-    //dibujamos los misiles enemigos
-    misilesEnemigos.forEach(m => m.estado && m.dibujar());
-
     //dibujamos los cañones
     canones.forEach(c => c.estado && c.dibujar());
-
+    //dibujamos los misiles enemigos
+    misilesEnemigos.forEach(m => m.estado && m.dibujar());
     //dibujamos los misiles del jugador
     misilesJugador.forEach(m => m.estado && m.dibujar());
-
     //dibujamos las explosiones
     explosiones.forEach(e => e.estado && e.dibujar());
 

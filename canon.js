@@ -8,7 +8,7 @@ class Canon extends Entidad{
     actualizar(dt){}
 
     disparar(destinoX, destinoY){
-        if(this.estado) return;
+        if(!this.estado) return;
         if(this.municion > 0){
             misilesJugador.push(new MisilJugador(this.x, this.y, destinoX, destinoY));
             this.municion--;
@@ -16,7 +16,7 @@ class Canon extends Entidad{
     }
 
     dibujar(){
-        if(this.estado) return;
+        if(!this.estado) return;
         //dibujamos el cañón como un rectángulo gris
         ctx.fillStyle = "gray";
         ctx.fillRect(this.x - 10, this.y - 10, 20, 20);
