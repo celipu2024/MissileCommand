@@ -4,17 +4,7 @@ const ctx = canvas.getContext("2d");
 canvas.width = 800;
 canvas.height = 600;
 
-//creamos el raton
-canvas.addEventListener("click", function(event){
-    //obtenemos la posicion del raton en el canvas
-    const rect = canvas.getBoundingClientRect();
-    const mouseX = event.clientX - rect.left;
-    const mouseY = event.clientY - rect.top;
-    //disparamos el cañon
-    canones[0].disparar(mouseX, mouseY);    
-});
-
-
+//variables globales
 //timer
 let lastTime = 0;
 //creamos donde se almacenan las ciudades
@@ -30,6 +20,37 @@ let explosiones = [];
 //variable para controlar el game over
 let gameOver = false;
 
+canvas.addEventListener("click", manejaraton, false);
+
+//creamos las funciones del raton
+function manejaraton(e){
+    switch(e.type){
+        case "click":
+        //obtenemos la posicion del raton en el canvas
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+        //disparamos el cañon
+        dispararDesdeCanonMasCercano(mouseX, mouseY);   
+    break;
+    } 
+};
+
+function dispararDesdeCanonMasCercano(x, y){
+    let canon = canones.slice();
+    canon.sort((a, b) => { 
+        let da = (a.x - x) * (a.x - x) + (a.y - y) * (a.y - y);
+        let db = (b.x - x) * (b.x - x) + (b.y - y) * (b.y - y);
+        return da - db; 
+    });
+    for (let i = 0; i < canon.length; i++){
+        if (canon[i].municion > 0){
+            canon[i].disparar(x, y);
+            return;
+        }
+    }
+}
+
 //creamos las funcion que inicializara todos los elementos
 function inicializar(){
     const separacionCiudades = canvas.width / 7;
@@ -39,7 +60,9 @@ function inicializar(){
     }
 
     //creamos los cañones y los añadimos al array
-    canones.push(new Canon(canvas.width/2, canvas.height - 20));
+    canones.push(new Canon(100, canvas.height - 20));
+    canones.push(new Canon(canvas.width / 2, canvas.height - 20));
+    canones.push(new Canon(canvas.width - 100, canvas.height - 20));
 
 }
 
@@ -57,7 +80,7 @@ function buclePrincipal(timestamp){
     lastTime = timestamp;
     //actualizamos la lógica
     if(!gameOver){
-    actualizar(deltaTime);
+        actualizar(deltaTime);
     }
     //dibujamos el juego
     dibujar();
@@ -104,7 +127,6 @@ function actualizar(dt){
     misilesJugador = misilesJugador.filter(m => m.estado);
     explosiones = explosiones.filter(e => e.estado);
 
-
     //comprobamos si quedan ciudades
     let ciudadesRestantes = ciudades.some(c => c.estado);
     if (!ciudadesRestantes){
@@ -120,46 +142,27 @@ function dibujar(){
     ctx.fillStyle = "#A52A2A";
     ctx.fillRect(0, canvas.height - 20, canvas.width, 20);
     //dibujamos las ciudades
-    for (var i = 0; i < ciudades.length; i++) {
-        if (ciudades[i].estado == true) {
-            ciudades[i].dibujar();
-        }
-    }
+    ciudades.forEach(c => c.estado && c.dibujar());
+
     //dibujamos los misiles enemigos
-    for (let i = 0; i < misilesEnemigos.length; i++) {
-    if (misilesEnemigos[i].estado == true) {
-        misilesEnemigos[i].dibujar();
-    }
-    }
+    misilesEnemigos.forEach(m => m.estado && m.dibujar());
+
     //dibujamos los cañones
-    for(let i = 0; i<canones.length; i++){
-        if (canones[i].estado==true){
-            canones[i].dibujar();   
-    }   
-    }
+    canones.forEach(c => c.estado && c.dibujar());
 
     //dibujamos los misiles del jugador
-    for (let i = 0; i < misilesJugador.length; i++) {
-    if (misilesJugador[i].estado == true) {
-        misilesJugador[i].dibujar();
-    }
-    }
+    misilesJugador.forEach(m => m.estado && m.dibujar());
 
     //dibujamos las explosiones
-    for (let i = 0; i < explosiones.length; i++) {
-    if (explosiones[i].estado == true) {
-        explosiones[i].dibujar();
-    }
-    }
+    explosiones.forEach(e => e.estado && e.dibujar());
 
     //dibujamos game over
     if(gameOver){
-    ctx.fillStyle = "white";
-    ctx.font = "48px Arial";
-    ctx.textAlign = "center";
-    ctx.fillText("GAME OVER", canvas.width/2, canvas.height/2);
+        ctx.fillStyle = "white";
+        ctx.font = "48px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText("GAME OVER", canvas.width/2, canvas.height/2);
     }
-
 }
 
 //generamos misiles enemigos cada cierto tiempo
