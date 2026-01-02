@@ -19,6 +19,17 @@ let misilesJugador = [];
 let explosiones = [];
 //variable para controlar el game over
 let gameOver = false;
+//variables para introducir sprites
+const spriteMisil = new Image();
+spriteMisil.src = "assets/img/MisilMc.png";
+const spritePuntero = new Image();
+spritePuntero.src = "assets/img/PunteroMC.png";
+//posición del ratón
+let mouseX = canvas.width / 2;
+let mouseY = canvas.height / 2;
+
+
+
 
 canvas.addEventListener("click",function(e){
     if (gameOver) return;
@@ -166,7 +177,21 @@ function dibujar(){
         ctx.textAlign = "center";
         ctx.fillText("GAME OVER", canvas.width/2, canvas.height/2);
     }
+    dibujarPuntero();
 }
+
+function dibujarPuntero() {
+    const tamaño = 32;
+
+    ctx.drawImage(
+        spritePuntero,
+        mouseX - tamaño / 2,
+        mouseY - tamaño / 2,
+        tamaño,
+        tamaño
+    );
+}
+
 
 //generamos misiles enemigos cada cierto tiempo
 setInterval(() => {

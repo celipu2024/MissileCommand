@@ -42,10 +42,24 @@ class MisilJugador extends Entidad{
 
     //dibujamos el misil como un rectángulo blanco
     dibujar(){
-        ctx.strokeStyle = "white";
-        ctx.beginPath();
-        ctx.moveTo(this.x, this.y);
-        ctx.lineTo(this.x - this.velX*10, this.y -this.velY*10); //cola del misil
-        ctx.stroke();
+        if (!this.estado) return;
+        const ancho = 12;
+        const alto = 24;
+        //calculamos el ángulo del misil según la dirección a la que vaya
+        const angulo = Math.atan2(this.velY, this.velX);
+        ctx.save();
+        //hacemos que el origen sea el misil
+        ctx.translate(this.x, this.y);
+        //rotamos la imagen según la trayectoria
+        ctx.rotate(angulo + Math.PI / 2);
+        //por ultimo dibujamos el sprite centrado
+        ctx.drawImage(
+            spriteMisil,
+            -ancho / 2,
+            -alto / 2,
+            ancho,
+            alto
+        );
+        ctx.restore();
     }
 }

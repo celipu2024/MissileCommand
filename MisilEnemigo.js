@@ -30,6 +30,9 @@ class MisilEnemigo extends Entidad{
         if(distanciaCuadrada < radio*radio){
             //se destruye la ciudad
             this.ciudadDestino.estado = false;
+            //creamos explosión en el impacto
+            explosiones.push(new Explosion(this.x, this.y));
+            //destruimos el misil enemigo
             this.estado = false;
         }
     }   
