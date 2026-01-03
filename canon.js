@@ -26,7 +26,6 @@ class Canon extends Entidad{
         ctx.fillRect(this.x - anchoCanon / 2, this.y - altoCanon, anchoCanon, altoCanon);
 
         //munición
-        ctx.fillStyle = "white";
         const anchoMisil = 3;
         const altoMisil  = 8;
         const separacionX = 6;
@@ -37,15 +36,23 @@ class Canon extends Entidad{
 
         while (restantes > 0) {
         //número de misiles en esta fila, usamos el min para que nos devuelva el numero menor
-        const enFila = Math.min(3 + fila, restantes);
+        const enFila = Math.min(3, restantes);
         const anchoFila = (enFila - 1) * separacionX;
         const inicioX = this.x - anchoFila / 2;
             for (let i = 0; i < enFila; i++){
-                //los colocamos centrados, uno encima de otro
-                ctx.fillRect(inicioX + i * separacionX,
-                this.y - altoCanon - altoMisil - fila * separacionY,
-                anchoMisil,
-                altoMisil);
+                ctx.save();
+                ctx.translate(
+                    inicioX + i * separacionX,
+                    this.y - altoCanon - fila * separacionY
+                );
+                ctx.drawImage(
+                    spriteMisil,
+                    -anchoMisil / 2,
+                    -altoMisil,
+                    anchoMisil,
+                    altoMisil
+                );
+                ctx.restore();
             }
             restantes -= enFila;
             fila++;

@@ -21,9 +21,14 @@ let explosiones = [];
 let gameOver = false;
 //variables para introducir sprites
 const spriteMisil = new Image();
-spriteMisil.src = "assets/img/MisilMc.png";
+spriteMisil.src = "MisilMC.png";
 const spritePuntero = new Image();
-spritePuntero.src = "assets/img/PunteroMC.png";
+spritePuntero.src = "PunteroMC.png";
+const spriteSuelo1 = new Image();
+spriteSuelo1.src = "Suelo1MC.png";
+const spriteSuelo2 = new Image();
+spriteSuelo2.src = "Suelo2MC.png";
+
 //posición del ratón
 let mouseX = canvas.width / 2;
 let mouseY = canvas.height / 2;
@@ -40,6 +45,13 @@ canvas.addEventListener("click",function(e){
     //disparamos el cañon
     dispararDesdeCanonMasCercano(mouseX, mouseY);   
 });
+
+canvas.addEventListener("mousemove", function(e){
+    const rect = canvas.getBoundingClientRect();
+    mouseX = e.clientX - rect.left;
+    mouseY = e.clientY - rect.top;
+});
+
 
 function dispararDesdeCanonMasCercano(x, y){
     let canon = canones.slice();
@@ -157,8 +169,11 @@ function dibujar(){
    //Limpiamos el canvas en cada frame
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     // Dibujamos el suelo
-    ctx.fillStyle = "#A52A2A";
-    ctx.fillRect(0, canvas.height - 20, canvas.width, 20);
+    const sueloY = canvas.height - 32;
+    // tramo principal del suelo
+    ctx.drawImage(spriteSuelo1, 0, sueloY, canvas.width, 32 );
+    ctx.drawImage(spriteSuelo2, 60, sueloY - 16, 64, 32);
+    ctx.drawImage(spriteSuelo2, canvas.width - 120, sueloY - 16, 64, 32);
     //dibujamos las ciudades
     ciudades.forEach(c => c.estado && c.dibujar());
     //dibujamos los cañones
@@ -177,6 +192,7 @@ function dibujar(){
         ctx.textAlign = "center";
         ctx.fillText("GAME OVER", canvas.width/2, canvas.height/2);
     }
+
     dibujarPuntero();
 }
 
