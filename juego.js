@@ -24,10 +24,11 @@ const spriteMisil = new Image();
 spriteMisil.src = "MisilMC.png";
 const spritePuntero = new Image();
 spritePuntero.src = "PunteroMC.png";
-const spriteSuelo1 = new Image();
-spriteSuelo1.src = "Suelo1MC.png";
-const spriteSuelo2 = new Image();
-spriteSuelo2.src = "Suelo2MC.png";
+const spriteSuelo = new Image();
+spriteSuelo.src = "SueloMC.png";
+const spriteCiudad = new Image();
+spriteCiudad.src = "CiudadMC.png";
+
 
 //posición del ratón
 let mouseX = canvas.width / 2;
@@ -168,12 +169,13 @@ function actualizar(dt){
 function dibujar(){
    //Limpiamos el canvas en cada frame
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    // Dibujamos el suelo
-    const sueloY = canvas.height - 32;
-    // tramo principal del suelo
-    ctx.drawImage(spriteSuelo1, 0, sueloY, canvas.width, 32 );
-    ctx.drawImage(spriteSuelo2, 60, sueloY - 16, 64, 32);
-    ctx.drawImage(spriteSuelo2, canvas.width - 120, sueloY - 16, 64, 32);
+    //dibujamos el suelo
+    const sueloAltura = spriteSuelo.height;
+    const sueloY = canvas.height - sueloAltura;
+
+    // dibujamos el suelo ocupando todo el ancho
+    ctx.drawImage(spriteSuelo, 0, sueloY, canvas.width, sueloAltura );
+
     //dibujamos las ciudades
     ciudades.forEach(c => c.estado && c.dibujar());
     //dibujamos los cañones
