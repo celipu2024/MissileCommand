@@ -20,11 +20,7 @@ class Canon extends Entidad{
 
         const anchoCanon = 60;
         const altoCanon = 14;
-
-        //dibujamos el cañón como un rectángulo gris
-        ctx.fillStyle = "gray";
-        ctx.fillRect(this.x - anchoCanon / 2, this.y - altoCanon, anchoCanon, altoCanon);
-
+        
         //munición
         const anchoMisil = 3;
         const altoMisil  = 8;
