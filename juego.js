@@ -19,6 +19,7 @@ let misilesJugador = [];
 let explosiones = [];
 //variable para controlar el game over
 let gameOver = false;
+const alturaSuelo=32;
 //variables para introducir sprites
 const spriteMisil = new Image();
 spriteMisil.src = "MisilMC.png";
@@ -41,8 +42,8 @@ canvas.addEventListener("click",function(e){
     if (gameOver) return;
     //obtenemos la posicion del raton en el canvas
     const rect = canvas.getBoundingClientRect();
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
+    mouseX = e.clientX - rect.left;
+    mouseY = e.clientY - rect.top;
     //disparamos el cañon
     dispararDesdeCanonMasCercano(mouseX, mouseY);   
 });
@@ -71,7 +72,7 @@ function dispararDesdeCanonMasCercano(x, y){
 
 //creamos las funcion que inicializara todos los elementos
 function inicializar(){
-    const sueloY = canvas.height - 20;
+    const sueloY = canvas.height - alturaSuelo;
 
     ciudades = [];
     canones = [];
@@ -83,16 +84,18 @@ function inicializar(){
     canones.push(new Canon(margenCanon, sueloY));
     canones.push(new Canon(canvas.width / 2, sueloY));
     canones.push(new Canon(canvas.width - margenCanon, sueloY));
-    //ciudades
-    const inicioCiudades = margenCanon + 80;
-    const finCiudades = canvas.width - margenCanon - 80;
-    const espacioTotal = finCiudades - inicioCiudades;
-    const separacion = espacioTotal / 5; // 6 ciudades → 5 espacios
 
-    for (let i = 0; i < 6; i++){
-        const x = inicioCiudades + i * separacion;
+    // ===== CIUDADES =====
+    const numCiudades = 6;
+    const margen = 80;
+    const espacio = (canvas.width - 2 * margen) / (numCiudades - 1);
+
+    for (let i = 0; i < numCiudades; i++) {
+        const x = margen + i * espacio;
         ciudades.push(new Ciudad(x, sueloY));
     }
+
+
 }
 
 
@@ -174,7 +177,7 @@ function dibujar(){
     const sueloY = canvas.height - sueloAltura;
 
     // dibujamos el suelo ocupando todo el ancho
-    ctx.drawImage(spriteSuelo, 0, sueloY, canvas.width, sueloAltura );
+    ctx.drawImage(spriteSuelo, 0, sueloY, canvas.width, sueloAltura);
 
     //dibujamos las ciudades
     ciudades.forEach(c => c.estado && c.dibujar());

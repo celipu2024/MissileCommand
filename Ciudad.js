@@ -2,8 +2,6 @@ class Ciudad extends Entidad{
     constructor(x, y){
         //llamada a la clase de la que hereda(Entidad)
         super(x, y);
-        this.ancho = 40;
-        this.alto = 20;
     }
     /**
      * Actualiza la lógica de la ciudad
@@ -12,9 +10,17 @@ class Ciudad extends Entidad{
     actualizar(dt){
     //comprobacion de si la ciudad esta activa
     }
-    dibujar(){
+    dibujar() {
         if (!this.estado) return;
-        ctx.fillStyle = "blue";
-        ctx.fillRect(this.x - this.ancho / 2, this.y - this.alto, this.ancho, this.alto);
+
+        const ancho = spriteCiudad.width;
+        const alto = spriteCiudad.height;
+
+        ctx.drawImage(
+            spriteCiudad,
+            this.x - ancho / 2,
+            this.y - alto
+        );
     }
+
 }
