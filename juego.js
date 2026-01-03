@@ -87,12 +87,26 @@ function inicializar(){
 
     // ===== CIUDADES =====
     const numCiudades = 6;
-    const margen = 80;
-    const espacio = (canvas.width - 2 * margen) / (numCiudades - 1);
+    const margen = 150;
+    //canvas.width = 800;
+    const espacio = (800 - 2 * margen) / (numCiudades - 1);
 
+    //canvas.height =600
+    let altura = 596;
+    let altura2 = 580;
     for (let i = 0; i < numCiudades; i++) {
-        const x = margen + i * espacio;
-        ciudades.push(new Ciudad(x, sueloY));
+        if(i<3){
+            const x = 150 + i * 80;
+            ciudades.push(new Ciudad(x, altura));
+            altura+=4;
+        }else if(i>3){
+            const x = 125 + i * 110;
+            ciudades.push(new Ciudad(x, altura2));
+            altura2+=15;
+        }else{
+            const x = 180 + i * espacio;
+            ciudades.push(new Ciudad(x, altura-10));
+        }
     }
 
 

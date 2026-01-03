@@ -21,19 +21,33 @@ class MisilEnemigo extends Entidad{
         this.x += this.velX * this.velocidad * dt;
         this.y += this.velY * this.velocidad * dt;
 
-        let destinoX = this.ciudadDestino.x - this.x;
-        let destinoY = this.ciudadDestino.y - this.y;
-
-        let distanciaCuadrada = destinoX * destinoX + destinoY * destinoY;
-        let radio = this.ciudadDestino.ancho/2;
-
-        if(distanciaCuadrada < radio*radio){
-            //se destruye la ciudad
-            this.ciudadDestino.estado = false;
-            //creamos explosión en el impacto
-            explosiones.push(new Explosion(this.x, this.y));
-            //destruimos el misil enemigo
+        const ciudad = this.ciudadDestino;
+        if(!ciudad.estado){
             this.estado = false;
+            return;
+        }
+
+        //dimensiones reales del sprite de la ciudad
+        const ancho = spriteCiudad.width;
+        const alto = spriteCiudad.height;
+
+        //colision
+        const left   = ciudad.x - ancho / 2;
+        const right  = ciudad.x + ancho / 2;
+        const top    = ciudad.y - alto;
+        const bottom = ciudad.y;
+
+        //comprobamos si ha habido impacto
+        if (this.x >= left &&
+            this.x <= right &&
+            this.y >= top &&
+            this.y <= bottom
+        ){
+            //destruimos ciudad
+            ciudad.estado = false;           
+            explosiones.push(new Explosion(this.x, this.y)); 
+            //destruimos el misil
+            this.estado = false;             
         }
     }   
 
