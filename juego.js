@@ -21,7 +21,7 @@ let explosiones = [];
 let gameOver = false;
 const alturaSuelo=32;
 //variables para la gestion de la dificultad
-let velocidadMisilesEnemigos = 0.005; // velocidad inicial
+let velocidadMisilesEnemigos = 0.045; // velocidad inicial
 let tiempoMisiles = 0;
 let intervaloMisiles = 2000; // empieza fácil
 let intervaloMinimo = 1000; //limite 1 misil por seg
