@@ -213,6 +213,7 @@ function actualizar(dt){
         gameOver = true;
         //desactivamos los cañones
         canones.forEach(c => c.estado = false);
+        document.getElementById("contenedor-juego").classList.add("game-over");
     }
 
     //aqui ponemos la logica de la dificultad
@@ -243,6 +244,8 @@ function actualizar(dt){
     if (misilesDestruidos >= objetivoVictoria) {
     victoria = true;
     gameOver = true;
+    document.getElementById("contenedor-juego").classList.add("game-over");
+
     }
 
 }
@@ -286,6 +289,13 @@ function dibujar(){
     ctx.font = "40px Arial";
     ctx.fillText("¡HAS GANADO!", canvas.width / 2 - 120, canvas.height / 2);
     }
+    //dibujamos marcador
+    ctx.fillStyle = "white";
+    ctx.font = "18px Arial";
+    ctx.textAlign = "left";
+
+    ctx.fillText(
+        "Misiles destruidos: " + misilesDestruidos + "/ " + objetivoVictoria ,10,25);
 
     dibujarPuntero();
 }
