@@ -10,7 +10,10 @@ class Canon extends Entidad{
     disparar(destinoX, destinoY){
         if(!this.estado) return;
         if(this.municion > 0){
-            misilesJugador.push(new MisilJugador(this.x, this.y, destinoX, destinoY));
+            const salidaY = this.y - spriteMisil.height; //altura del cañon
+            misilesJugador.push( //ponemos para que el misil salga del cañon
+                new MisilJugador(this.x, salidaY, destinoX, destinoY)
+            );
             this.municion--;
         }
     }

@@ -32,7 +32,10 @@ class Explosion extends Entidad{
             let distanciaCuadrada = dx*dx + dy*dy;
 
             if(distanciaCuadrada < this.radio*this.radio){
-                m.estado = false;
+                if (m.estado) {          // para asegurarnos de que cuenta solo un misil, no varios
+                    m.estado = false;
+                    misilesDestruidos++; //añadimos un misil para la victoria
+                }
             }
         }
     }
@@ -45,3 +48,4 @@ class Explosion extends Entidad{
     }
 
 }
+

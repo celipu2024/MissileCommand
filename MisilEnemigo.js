@@ -2,10 +2,10 @@
 class MisilEnemigo extends Entidad{
 
 //constructor que recibe la posicion inicial y la posicion destino
-    constructor(inicioX, inicioY, ciudadDestino){
+    constructor(inicioX, inicioY, ciudadDestino, velocidad){
         super(inicioX, inicioY);
         this.ciudadDestino = ciudadDestino;
-        this.velocidad = 0.05;
+        this.velocidad = velocidad;
 
         let destinoX = ciudadDestino.x - inicioX;
         let destinoY = ciudadDestino.y - inicioY;

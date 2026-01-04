@@ -20,6 +20,18 @@ let explosiones = [];
 //variable para controlar el game over
 let gameOver = false;
 const alturaSuelo=32;
+//variables para la gestion de la dificultad
+let velocidadMisilesEnemigos = 0.005; // velocidad inicial
+let tiempoMisiles = 0;
+let intervaloMisiles = 2000; // empieza fácil
+let intervaloMinimo = 1000; //limite 1 misil por seg
+let contadorMisiles = 0;
+let misilesPorOleada = 1;
+let misilesLanzados = 0;
+//variables para condicion de victoria
+let misilesDestruidos = 0;
+let objetivoVictoria = 30;
+let victoria = false;
 //variables para introducir sprites
 const spriteMisil = new Image();
 spriteMisil.src = "MisilMC.png";
@@ -85,7 +97,7 @@ function inicializar(){
     canones.push(new Canon(canvas.width / 2, sueloY));
     canones.push(new Canon(canvas.width - margenCanon, sueloY));
 
-    // ===== CIUDADES =====
+    // CIUDADES 
     const numCiudades = 6;
     const margen = 150;
     //canvas.width = 800;
@@ -109,6 +121,9 @@ function inicializar(){
         }
     }
 
+    //iniciamos el progreso de dificultad
+     lanzarMisilEnemigo(); 
+
 
 }
 
@@ -117,7 +132,6 @@ function inicializar(){
 //timestamp=ms que lleva abierta la página(nos sirve para saber cuánto tiempo ha pasado entre un "dibujo" y el siguiente)
 *@param {number} timestamp
 */
-
 
 
 function buclePrincipal(timestamp){
@@ -133,6 +147,25 @@ function buclePrincipal(timestamp){
     /*decirle al navegador que estamos preparados para dibujar el siguiente cuadro de la animación y solicitarle que nos avise de cuándo
     podemos empezar la actualización del dibujo*/
     requestAnimationFrame(buclePrincipal);
+}
+
+//funcion para la dificultad
+function lanzarMisilEnemigo(){
+    if(gameOver) return;
+
+    let ciudad = ciudades[Math.floor(Math.random() * ciudades.length)];
+    if(ciudad.estado){
+        let x = Math.random() * canvas.width;
+        misilesEnemigos.push(new MisilEnemigo(x, 0, ciudad, velocidadMisilesEnemigos));
+        contadorMisiles++;
+    }
+
+    if(contadorMisiles % 10 === 0 && intervaloMisiles > intervaloMinimo){
+        intervaloMisiles -= 250; //baja progresivo
+    }
+
+    //siguiente misil usa el nuevo intervalo
+    setTimeout(lanzarMisilEnemigo, intervaloMisiles);
 }
 
 function actualizar(dt){
@@ -167,6 +200,7 @@ function actualizar(dt){
     for (let i = 0; i < explosiones.length; i++) {
         explosiones[i].actualizar(dt);
     }
+    
 
     //eliminamos todos los objetos muertos
     misilesEnemigos = misilesEnemigos.filter(m => m.estado);
@@ -180,6 +214,37 @@ function actualizar(dt){
         //desactivamos los cañones
         canones.forEach(c => c.estado = false);
     }
+
+    //aqui ponemos la logica de la dificultad
+    tiempoMisiles += dt;
+
+    if (tiempoMisiles >= intervaloMisiles) {
+
+        // lanzar varios misiles a la vez
+        for (let i = 0; i < misilesPorOleada; i++) {
+            let ciudad = ciudades[Math.floor(Math.random() * ciudades.length)];
+            if (ciudad.estado) {
+                let x = Math.random() * canvas.width;
+                misilesEnemigos.push(new MisilEnemigo(x, 0, ciudad));
+                misilesLanzados++;
+            }
+        }
+
+        // cada 10 misiles → más dificultad
+        if (misilesLanzados % 10 === 0) {
+            misilesPorOleada++; //aumentamos misiles por vez
+            intervaloMisiles = Math.max(800, intervaloMisiles - 300);
+            velocidadMisilesEnemigos += 0.00018; //aumentamos velocidad.
+        }
+
+        tiempoMisiles = 0;
+    }
+    //condicion de que si destruyes 30 misiles enemigos ganas
+    if (misilesDestruidos >= objetivoVictoria) {
+    victoria = true;
+    gameOver = true;
+    }
+
 }
 
 
@@ -212,6 +277,13 @@ function dibujar(){
         ctx.fillText("GAME OVER", canvas.width/2, canvas.height/2);
     }
 
+    //dibujamos victoria
+    if (victoria) {
+    ctx.fillStyle = "white";
+    ctx.font = "40px Arial";
+    ctx.fillText("¡HAS GANADO!", canvas.width / 2 - 120, canvas.height / 2);
+    }
+
     dibujarPuntero();
 }
 
@@ -228,8 +300,8 @@ function dibujarPuntero() {
 }
 
 
-//generamos misiles enemigos cada cierto tiempo
-setInterval(() => {
+//generamos misiles enemigos cada cierto tiempo YA NO SIRVE PORQUE AÑADIMOS DIFICULTAD
+/*setInterval(() => {
     if(gameOver) return;
 
     let ciudad = ciudades[Math.floor(Math.random() * ciudades.length)];
@@ -238,6 +310,7 @@ setInterval(() => {
         misilesEnemigos.push(new MisilEnemigo(x, 0, ciudad));
     }
 }, 2000);
+*/
 
 //inicializamos el juego
 inicializar();
