@@ -250,7 +250,10 @@ function actualizar(dt){
 
 function dibujar(){
    //Limpiamos el canvas en cada frame
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //hacemos que el fondo se pinte de negro
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     //dibujamos el suelo
     const sueloAltura = spriteSuelo.height;
     const sueloY = canvas.height - sueloAltura;

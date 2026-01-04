@@ -30,14 +30,22 @@
       border-radius:10px;
       backdrop-filter: blur(4px);
     }
+    #contenedor-juego {
+        border: 4px solid white; /* marco del juego */
+        background-color: black;
+    }
     canvas {
       cursor: none;
     }
   </style>
 </head>
 <body>
+
     <h1>MISSILE COMMAND</h1>
     <h2>Hecho por Celia Puga y Marina Perona</h2>
+    <div id="contenedor-juego">
+        <canvas id="juegoCanvas"></canvas>
+    </div>
     <canvas id="juegoCanvas"></canvas>
     <script src="Entidad.js"></script>
     <script src="Ciudad.js"></script>
