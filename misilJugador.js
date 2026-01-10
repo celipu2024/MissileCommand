@@ -3,6 +3,8 @@ class MisilJugador extends Entidad{
     //constructor que recibe la posicion inicial y la posicion destino
     constructor(inicioX, inicioY,destinoX,destinoY){
         super(inicioX, inicioY); //llamamos al constructor de la clase padre
+        this.inicioX = inicioX; //para la estela
+        this.inicioY = inicioY; //para la estela
         this.destinoX = destinoX;
         this.destinoY = destinoY;
         this.velocidad = 0.2; //pixeles por segundo
@@ -43,6 +45,16 @@ class MisilJugador extends Entidad{
     //dibujamos el misil como un rectángulo blanco
     dibujar(){
         if (!this.estado) return;
+
+        //ESTELA
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(this.inicioX, this.inicioY);
+        ctx.lineTo(this.x, this.y);
+        ctx.stroke();
+
+        //MISIL
         //un poco más grandes que cuando estan apilados en el cañón para darle mas visivilidad
         const ancho = 10;
         const alto = 16;

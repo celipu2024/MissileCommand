@@ -4,6 +4,11 @@ class MisilEnemigo extends Entidad{
 //constructor que recibe la posicion inicial y la posicion destino
     constructor(inicioX, inicioY, ciudadDestino, velocidad){
         super(inicioX, inicioY);
+
+        //coords para dibujar la estela
+        this.inicioX = inicioX;
+        this.inicioY = inicioY;
+
         this.ciudadDestino = ciudadDestino;
         this.velocidad = velocidad;
 
@@ -52,12 +57,21 @@ class MisilEnemigo extends Entidad{
     }   
 
     dibujar(){
-        //dibujamos el misil como un rectángulo rojo
+        if (!this.estado) return;
+
+        //dibujamos la estela como una línea roja
         ctx.strokeStyle = "red";
+        ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.moveTo(this.x, this.y);
-        ctx.lineTo(this.x, this.y -10);
+        ctx.moveTo(this.inicioX, this.inicioY);
+        ctx.lineTo(this.x, this.y);
         ctx.stroke();
+
+        //dibujamos el misil como un puntito blanco al final de la estela
+        ctx.fillStyle = "white";
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+        ctx.fill();
     }
 
 }
