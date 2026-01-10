@@ -24,34 +24,50 @@ class Canon extends Entidad{
     dibujar() {
         if (!this.estado) return;
 
-        // 🔹 Tamaño del cañón
-        const anchoCanon = 40;
-        const altoCanon = 20;
+        //Tamaño del cañón
+        const anchoCanon = 100;
+        const altoCanon = 10;
 
-        // 🔹 Tamaño de los misiles apilados
-        const anchoMisil = 18;
-        const altoMisil = 36;
-        const separacion = 4;
+        //pisos de la piramide de misiles
+        let pisos = 4;
+        let misilesRestantes = this.municion;
+
+        //Tamaño de los misiles apilados
+        const anchoMisil = 30;
+        const altoMisil = 35;
+        const separacionX = 2;
+        const separacionY = 1;
+
+        // Dibujamos el cañón
+        ctx.fillStyle = "white";
         ctx.fillRect(
             this.x - anchoCanon / 2,
             this.y - altoCanon,
             anchoCanon,
             altoCanon
         );
-        // 🔹 Apilado vertical (como el original)
-        for (let i = 0; i < this.municion; i++) {
-            const y =
-                this.y - altoCanon
-                - i * (altoMisil + separacion)
-                - altoMisil;
 
-            ctx.drawImage(
-                spriteMisil,
-                this.x - anchoMisil / 2,
-                y,
-                anchoMisil,
-                altoMisil
-            );
+        //filas
+        for (let i = 0; i < pisos && misilesRestantes > 0; i ++) {
+            //misiles en la fila
+            let misilesEnFila = pisos - i;
+            //ancho total de la fila
+            let anchoFila = misilesEnFila * anchoMisil + (misilesEnFila -1) * separacionX;
+            //posicion base
+            let inicioX = this.x - anchoFila / 2;
+            let y = this.y - altoCanon - i * (altoMisil + separacionY) - altoMisil;
+            
+            //columnas
+            for(let j = 0; j < misilesEnFila && misilesRestantes > 0; j ++) { 
+                ctx.drawImage(
+                    spriteMisil,
+                    inicioX + j * (anchoMisil + separacionX),
+                    y,
+                    anchoMisil,
+                    altoMisil
+                );
+                misilesRestantes--;
+            }
         }
     }
 
