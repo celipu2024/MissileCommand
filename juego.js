@@ -302,7 +302,7 @@ function dibujar(){
 }
 
 function dibujarPuntero() {
-    const tamaño = 32;
+    const tamaño = 15;
 
     ctx.drawImage(
         spritePuntero,

@@ -26,26 +26,18 @@ class Canon extends Entidad{
 
         //Tamaño del cañón
         const anchoCanon = 100;
-        const altoCanon = 10;
+        const altoCanon = 0;
 
         //pisos de la piramide de misiles
         let pisos = 4;
         let misilesRestantes = this.municion;
 
         //Tamaño de los misiles apilados
-        const anchoMisil = 30;
-        const altoMisil = 35;
-        const separacionX = 2;
-        const separacionY = 1;
-
-        // Dibujamos el cañón
-        ctx.fillStyle = "white";
-        ctx.fillRect(
-            this.x - anchoCanon / 2,
-            this.y - altoCanon,
-            anchoCanon,
-            altoCanon
-        );
+        const anchoMisil = 9;
+        const altoMisil = 14;
+        const separacionX = 8;
+        const pasoVertical = 7;
+        const offsetY = 20;
 
         //filas
         for (let i = 0; i < pisos && misilesRestantes > 0; i ++) {
@@ -55,7 +47,7 @@ class Canon extends Entidad{
             let anchoFila = misilesEnFila * anchoMisil + (misilesEnFila -1) * separacionX;
             //posicion base
             let inicioX = this.x - anchoFila / 2;
-            let y = this.y - altoCanon - i * (altoMisil + separacionY) - altoMisil;
+            let y = this.y - altoCanon - offsetY - i * pasoVertical - altoMisil;
             
             //columnas
             for(let j = 0; j < misilesEnFila && misilesRestantes > 0; j ++) { 
