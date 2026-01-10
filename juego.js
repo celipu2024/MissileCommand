@@ -54,6 +54,7 @@ const spriteSuelo = new Image();
 spriteSuelo.src = "SueloMC.png";
 const spriteCiudad = new Image();
 spriteCiudad.src = "CiudadMC.png";
+<<<<<<< HEAD
 
 //variables para el manejo de los niveles
 let nivelActual = 1;
@@ -73,6 +74,15 @@ const dificultadNiveles = {
     2: { velocidadMisiles: 0.045, intervalo: 1800, misilesPorOleada: 1 },
     3: { velocidadMisiles: 0.06, intervalo: 1200, misilesPorOleada: 2 }
 };
+=======
+// efectos de sonido
+const sndDisparo = new Audio("disparo.mp3");
+const sndExplosion = new Audio("explosion.mp3");
+const sndCiudad = new Audio("ciudad.mp3");
+const sndInicio = new Audio("inicio.mp3");
+const sndGameOver = new Audio("gameover.mp3");
+const sndMisilEnemigo = new Audio("enemigo.mp3");
+>>>>>>> 04f94fee6b9dabf6dce2cffbd0ba097e05592cea
 
 //posición del ratón
 let mouseX = canvas.width / 2;
@@ -155,7 +165,12 @@ function inicializar(){
     }
 
     //iniciamos el progreso de dificultad
+<<<<<<< HEAD
     //lanzarMisilEnemigo(); 
+=======
+     lanzarMisilEnemigo();
+
+>>>>>>> 04f94fee6b9dabf6dce2cffbd0ba097e05592cea
 
     //aplicamos la dificultad del nivel actual
     aplicarDificultadNivel();
@@ -192,6 +207,8 @@ function buclePrincipal(timestamp){
         let x = Math.random() * canvas.width;
         misilesEnemigos.push(new MisilEnemigo(x, 0, ciudad, velocidadMisilesEnemigos));
         contadorMisiles++;
+        sndMisilEnemigo.currentTime = 0;
+        sndMisilEnemigo.play();
     }
 
     if(contadorMisiles % 10 === 0 && intervaloMisiles > intervaloMinimo){
@@ -232,7 +249,16 @@ function actualizar(dt){
     //comprobamos si quedan ciudades
     if (!ciudades.some(c => c.estado)){
         gameOver = true;
+<<<<<<< HEAD
         return;
+=======
+        //desactivamos los cañones
+        canones.forEach(c => c.estado = false);
+        document.getElementById("contenedor-juego").classList.add("game-over");
+        sndGameOver.currentTime = 0;
+        sndGameOver.play(); //sonido gameover
+
+>>>>>>> 04f94fee6b9dabf6dce2cffbd0ba097e05592cea
     }
 
     //escalamos la dificultad a partir del nivel 2
@@ -241,11 +267,23 @@ function actualizar(dt){
     if (tiempoMisiles >= intervaloMisiles) {
         let ciudadesVivas = ciudades.filter(c => c.estado);
         // lanzar varios misiles a la vez
+<<<<<<< HEAD
         for (let i = 0; i < misilesPorOleada && ciudadesVivas.length > 0; i++) {
             let ciudad = ciudadesVivas[Math.floor(Math.random() * ciudadesVivas.length)];
             let x = Math.random() * canvas.width;
             
             misilesEnemigos.push(new MisilEnemigo(x, 0, ciudad, velocidadMisilesEnemigos));
+=======
+        for (let i = 0; i < misilesPorOleada; i++) {
+            let ciudad = ciudades[Math.floor(Math.random() * ciudades.length)];
+            if (ciudad.estado) {
+                let x = Math.random() * canvas.width;
+                misilesEnemigos.push(new MisilEnemigo(x, 0, ciudad));
+                misilesLanzados++;
+                sndMisilEnemigo.currentTime = 0;
+                sndMisilEnemigo.play();
+            }
+>>>>>>> 04f94fee6b9dabf6dce2cffbd0ba097e05592cea
         }
         tiempoMisiles = 0;
     }
@@ -382,5 +420,7 @@ function activarMarciano(){
 }
 //inicializamos el juego
 inicializar();
+sndInicio.currentTime = 0;
+sndInicio.play(); //sonido inicio
 //empezamos el bucle principal
 requestAnimationFrame(buclePrincipal);

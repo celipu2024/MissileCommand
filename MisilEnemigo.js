@@ -49,7 +49,9 @@ class MisilEnemigo extends Entidad{
             this.y <= bottom
         ){
             //destruimos ciudad
-            ciudad.estado = false;           
+            ciudad.estado = false;
+            sndCiudad.currentTime = 0;
+            sndCiudad.play();//reproducimos sonido        
             explosiones.push(new Explosion(this.x, this.y)); 
             //destruimos el misil
             this.estado = false;             
