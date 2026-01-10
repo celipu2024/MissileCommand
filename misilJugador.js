@@ -43,8 +43,8 @@ class MisilJugador extends Entidad{
     //dibujamos el misil como un rectángulo blanco
     dibujar(){
         if (!this.estado) return;
-        const ancho = 12;
-        const alto = 24;
+        const ancho = 20;
+        const alto = 40;
         //calculamos el ángulo del misil según la dirección a la que vaya
         const angulo = Math.atan2(this.velY, this.velX);
         ctx.save();

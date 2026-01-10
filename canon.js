@@ -2,6 +2,8 @@
 class Canon extends Entidad{
     constructor(x, y){
         super(x, y);
+        //this.x = centro horizontal del cañon
+        //this.y = posicion del suelo(parte superior)
         this.municion = 10; //cantidad de munición inicial
     }
 
@@ -19,72 +21,38 @@ class Canon extends Entidad{
     }
 
 
-dibujar(){
-    if(!this.estado) return;
+    dibujar() {
+        if (!this.estado) return;
 
-    const anchoCanon = 32;
-    const altoCanon = 16;
+        // 🔹 Tamaño del cañón
+        const anchoCanon = 40;
+        const altoCanon = 20;
 
-    // munición
-    const anchoMisil = 6;
-    const altoMisil  = 14;
-    const separacionX = 4;
-    const separacionY = 4;
+        // 🔹 Tamaño de los misiles apilados
+        const anchoMisil = 18;
+        const altoMisil = 36;
+        const separacion = 4;
+        ctx.fillRect(
+            this.x - anchoCanon / 2,
+            this.y - altoCanon,
+            anchoCanon,
+            altoCanon
+        );
+        // 🔹 Apilado vertical (como el original)
+        for (let i = 0; i < this.municion; i++) {
+            const y =
+                this.y - altoCanon
+                - i * (altoMisil + separacion)
+                - altoMisil;
 
-    let restantes = this.municion;
-    let fila = 0;
-
-    const filas = Math.ceil(this.municion / 3);
-    const alturaBloque = (filas - 1) * separacionY;
-    const inicioY = this.y - altoCanon + alturaBloque;
-
-    const izquierdaCanon = this.x - anchoCanon / 2;
-
-    while (restantes > 0) {
-
-        // 🔹 CUÁNTOS MISILES EN ESTA FILA
-        const enFila = Math.min(3, restantes);
-
-        // 🔹 ANCHO REAL DE LA FILA
-        const anchoFila =
-            enFila * anchoMisil +
-            (enFila - 1) * separacionX;
-
-        // 🔹 POSICIÓN BASE DEL BLOQUE
-        let inicioX =
-            izquierdaCanon + (anchoCanon - anchoFila) / 2;
-
-        // 🔹 OFFSET SOLO PARA LOS MISILES
-        let offsetMisiles = 0;
-
-        if (this.x < canvas.width / 3) {
-            offsetMisiles = 6;
-        }
-        else if (this.x > canvas.width * 2 / 3) {
-            offsetMisiles = -6;
-        }
-
-        // 🔹 DIBUJO DE LOS MISILES
-        for (let i = 0; i < enFila; i++){
-            ctx.save();
-            ctx.translate(
-                inicioX + i * (anchoMisil + separacionX)
-                + anchoMisil / 2
-                + offsetMisiles,
-                inicioY - fila * separacionY
-            );
             ctx.drawImage(
                 spriteMisil,
-                -anchoMisil / 2,
-                -altoMisil / 2,
+                this.x - anchoMisil / 2,
+                y,
                 anchoMisil,
                 altoMisil
             );
-            ctx.restore();
         }
-
-        restantes -= enFila;
-        fila++;
     }
-}
+
 }

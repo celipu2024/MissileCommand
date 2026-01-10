@@ -84,6 +84,7 @@ function dispararDesdeCanonMasCercano(x, y){
 
 //creamos las funcion que inicializara todos los elementos
 function inicializar(){
+    //altura del suelo
     const sueloY = canvas.height - alturaSuelo;
 
     ciudades = [];
@@ -93,9 +94,9 @@ function inicializar(){
     const anchoCanon = 28;
     const margenCanon = anchoCanon / 2;
     //creamos los cañones y los añadimos al array
-    canones.push(new Canon(margenCanon, sueloY));
-    canones.push(new Canon(canvas.width / 2, sueloY));
-    canones.push(new Canon(canvas.width - margenCanon, sueloY));
+    canones.push(new Canon(margenCanon + 55, sueloY));
+    canones.push(new Canon(canvas.width / 2 - 5, sueloY));
+    canones.push(new Canon(canvas.width - margenCanon - 25, sueloY));
 
     // CIUDADES 
     const numCiudades = 6;
