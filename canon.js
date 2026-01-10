@@ -18,43 +18,73 @@ class Canon extends Entidad{
         }
     }
 
-    dibujar(){
-        if(!this.estado) return;
 
-        const anchoCanon = 60;
-        const altoCanon = 14;
-        
-        //munición
-        const anchoMisil = 3;
-        const altoMisil  = 8;
-        const separacionX = 6;
-        const separacionY = 6;
+dibujar(){
+    if(!this.estado) return;
 
-        let restantes = this.municion;
-        let fila = 0;
+    const anchoCanon = 32;
+    const altoCanon = 16;
 
-        while (restantes > 0) {
-        //número de misiles en esta fila, usamos el min para que nos devuelva el numero menor
+    // munición
+    const anchoMisil = 6;
+    const altoMisil  = 14;
+    const separacionX = 4;
+    const separacionY = 4;
+
+    let restantes = this.municion;
+    let fila = 0;
+
+    const filas = Math.ceil(this.municion / 3);
+    const alturaBloque = (filas - 1) * separacionY;
+    const inicioY = this.y - altoCanon + alturaBloque;
+
+    const izquierdaCanon = this.x - anchoCanon / 2;
+
+    while (restantes > 0) {
+
+        // 🔹 CUÁNTOS MISILES EN ESTA FILA
         const enFila = Math.min(3, restantes);
-        const anchoFila = (enFila - 1) * separacionX;
-        const inicioX = this.x - anchoFila / 2;
-            for (let i = 0; i < enFila; i++){
-                ctx.save();
-                ctx.translate(
-                    inicioX + i * separacionX,
-                    this.y - altoCanon - fila * separacionY
-                );
-                ctx.drawImage(
-                    spriteMisil,
-                    -anchoMisil / 2,
-                    -altoMisil,
-                    anchoMisil,
-                    altoMisil
-                );
-                ctx.restore();
-            }
-            restantes -= enFila;
-            fila++;
+
+        // 🔹 ANCHO REAL DE LA FILA
+        const anchoFila =
+            enFila * anchoMisil +
+            (enFila - 1) * separacionX;
+
+        // 🔹 POSICIÓN BASE DEL BLOQUE
+        let inicioX =
+            izquierdaCanon + (anchoCanon - anchoFila) / 2;
+
+        // 🔹 OFFSET SOLO PARA LOS MISILES
+        let offsetMisiles = 0;
+
+        if (this.x < canvas.width / 3) {
+            offsetMisiles = 6;
         }
+        else if (this.x > canvas.width * 2 / 3) {
+            offsetMisiles = -6;
+        }
+
+        // 🔹 DIBUJO DE LOS MISILES
+        for (let i = 0; i < enFila; i++){
+            ctx.save();
+            ctx.translate(
+                inicioX + i * (anchoMisil + separacionX)
+                + anchoMisil / 2
+                + offsetMisiles,
+                inicioY - fila * separacionY
+            );
+            ctx.drawImage(
+                spriteMisil,
+                -anchoMisil / 2,
+                -altoMisil / 2,
+                anchoMisil,
+                altoMisil
+            );
+            ctx.restore();
+        }
+
+        restantes -= enFila;
+        fila++;
     }
+}
 }

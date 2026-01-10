@@ -295,7 +295,7 @@ function dibujar(){
     ctx.textAlign = "left";
 
     ctx.fillText(
-        "Misiles destruidos: " + misilesDestruidos + "/ " + objetivoVictoria ,10,25);
+        spriteSuelo.height+"Misiles destruidos: " + misilesDestruidos + "/ " + objetivoVictoria ,10,25);
 
     dibujarPuntero();
 }
