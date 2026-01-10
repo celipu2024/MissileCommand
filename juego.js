@@ -41,7 +41,13 @@ const spriteSuelo = new Image();
 spriteSuelo.src = "SueloMC.png";
 const spriteCiudad = new Image();
 spriteCiudad.src = "CiudadMC.png";
-
+// efectos de sonido
+const sndDisparo = new Audio("disparo.mp3");
+const sndExplosion = new Audio("explosion.mp3");
+const sndCiudad = new Audio("ciudad.mp3");
+const sndInicio = new Audio("inicio.mp3");
+const sndGameOver = new Audio("gameover.mp3");
+const sndMisilEnemigo = new Audio("enemigo.mp3");
 
 //posición del ratón
 let mouseX = canvas.width / 2;
@@ -123,7 +129,7 @@ function inicializar(){
     }
 
     //iniciamos el progreso de dificultad
-     lanzarMisilEnemigo(); 
+     lanzarMisilEnemigo();
 
 
 }
@@ -159,6 +165,8 @@ function lanzarMisilEnemigo(){
         let x = Math.random() * canvas.width;
         misilesEnemigos.push(new MisilEnemigo(x, 0, ciudad, velocidadMisilesEnemigos));
         contadorMisiles++;
+        sndMisilEnemigo.currentTime = 0;
+        sndMisilEnemigo.play();
     }
 
     if(contadorMisiles % 10 === 0 && intervaloMisiles > intervaloMinimo){
@@ -215,6 +223,9 @@ function actualizar(dt){
         //desactivamos los cañones
         canones.forEach(c => c.estado = false);
         document.getElementById("contenedor-juego").classList.add("game-over");
+        sndGameOver.currentTime = 0;
+        sndGameOver.play(); //sonido gameover
+
     }
 
     //aqui ponemos la logica de la dificultad
@@ -229,6 +240,8 @@ function actualizar(dt){
                 let x = Math.random() * canvas.width;
                 misilesEnemigos.push(new MisilEnemigo(x, 0, ciudad));
                 misilesLanzados++;
+                sndMisilEnemigo.currentTime = 0;
+                sndMisilEnemigo.play();
             }
         }
 
@@ -328,5 +341,7 @@ function dibujarPuntero() {
 
 //inicializamos el juego
 inicializar();
+sndInicio.currentTime = 0;
+sndInicio.play(); //sonido inicio
 //empezamos el bucle principal
 requestAnimationFrame(buclePrincipal);

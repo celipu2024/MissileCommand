@@ -16,8 +16,11 @@ class Canon extends Entidad{
             misilesJugador.push( //ponemos para que el misil salga del cañon
                 new MisilJugador(this.x, salidaY, destinoX, destinoY)
             );
+            sndDisparo.currentTime = 0;
+            sndDisparo.play(); //reproducimos sonido
             this.municion--;
         }
+
     }
 
 
