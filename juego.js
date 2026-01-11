@@ -27,6 +27,11 @@ let explosiones = [];
 //instanciamos el marciano
 let marciano = null;
 
+//variables avion
+let avion = null;
+let tiempoReaparicionAvion = 0;
+let delayAvion = 3000; // reaparece cada 3 seg si muere
+
 //variable para controlar el game over
 let gameOver = false;
 const alturaSuelo=32;
@@ -40,9 +45,12 @@ let intervaloMisiles = 2000; // empieza fácil
 let misilesPorOleada = 1;
 let misilesLanzados = 0;
 
+//tiempo cooldown marcianos
+let tiempoReaparicionMarciano = 0;
+let delayMarciano = 4000; // 4 segundos
+
 //variables para condicion de victoria
 let misilesDestruidos = 0;
-let objetivoVictoria = 30;
 let victoria = false;
 
 //variables para introducir sprites
@@ -54,7 +62,10 @@ const spriteSuelo = new Image();
 spriteSuelo.src = "SueloMC.png";
 const spriteCiudad = new Image();
 spriteCiudad.src = "CiudadMC.png";
-
+const spriteMarciano = new Image();
+spriteMarciano.src = "marciano.png";
+const spriteAvion = new Image();
+spriteAvion.src = "avion.png"; 
 
 // efectos de sonido
 const sndDisparo = new Audio("disparo.mp3");
@@ -63,6 +74,25 @@ const sndCiudad = new Audio("ciudad.mp3");
 const sndInicio = new Audio("inicio.mp3");
 const sndGameOver = new Audio("gameover.mp3");
 const sndMisilEnemigo = new Audio("enemigo.mp3");
+
+//niveles
+let nivelActual = 1;
+const NIVEL_MAXIMO = 3;
+let nivelCompletado = false;
+
+const objetivosPorNivel = {
+    1: 15,   // destruye 15 para pasar al nivel 2
+    2: 25,   // destruye 25 para pasar al nivel 3
+    3: 40    // destruye 40 y ganas
+};
+
+// tabla de dificultad
+const dificultadNiveles = {
+    1: { velocidadMisiles: 0.045, intervalo: 2000, misilesPorOleada: 1 },
+    2: { velocidadMisiles: 0.060, intervalo: 1500, misilesPorOleada: 2 },
+    3: { velocidadMisiles: 0.080, intervalo: 1200, misilesPorOleada: 3 }
+};
+
 
 //posición del ratón
 let mouseX = canvas.width / 2;
@@ -105,7 +135,10 @@ function dispararDesdeCanonMasCercano(x, y){
 
 //creamos las funcion que inicializara todos los elementos
 function inicializar(){
+    misilesDestruidos = 0;
     marciano = null;
+    nivelCompletado = false;
+
     //altura del suelo
     const sueloY = canvas.height - alturaSuelo;
 
@@ -145,12 +178,13 @@ function inicializar(){
     }
 
 
-     lanzarMisilEnemigo();
+     //lanzarMisilEnemigo();
 
 
     //aplicamos la dificultad del nivel actual
     aplicarDificultadNivel();
 }
+
 
 
 /** 
@@ -207,6 +241,19 @@ function lanzarMisilDesdeMarciano(x, y){
     misilesEnemigos.push(new MisilEnemigo(x, y, ciudad, velocidadMisilesEnemigos));
 }
 
+//lanzar misil desde avion
+function lanzarMisilDesdeAvion(x, y){
+    let ciudadesVivas = ciudades.filter(c => c.estado);
+    if (ciudadesVivas.length === 0) return;
+
+    let ciudad = ciudadesVivas[Math.floor(Math.random() * ciudadesVivas.length)];
+    misilesEnemigos.push(new MisilEnemigo(x, y, ciudad, velocidadMisilesEnemigos));
+
+    sndMisilEnemigo.currentTime = 0;
+    sndMisilEnemigo.play();
+}
+
+
 function actualizar(dt){
     //actualizamos los misiles enemigos
     misilesEnemigos.forEach(m => m.actualizar(dt));
@@ -214,8 +261,26 @@ function actualizar(dt){
     misilesJugador.forEach(m => m.actualizar(dt));
     //actualizamos las explosiones
     explosiones.forEach(e => e.actualizar(dt));
-    //actualizamos el marciano si existe
-    if (marciano && marciano.estado) marciano.actualizar(dt);
+    // Actualizamos marciano si existe, o esperamos para reaparecer
+    if (marciano && marciano.estado) {
+        marciano.actualizar(dt);
+    } else {
+        tiempoReaparicionMarciano += dt;
+        if (tiempoReaparicionMarciano >= delayMarciano && nivelActual >= 2) {
+            marciano = new Marciano();
+            tiempoReaparicionMarciano = 0;
+        }
+    }
+    //logica avion
+    if (avion && avion.estado) {
+        avion.actualizar(dt);
+    } else if (nivelActual >= 3) {
+        tiempoReaparicionAvion += dt;
+        if (tiempoReaparicionAvion >= delayAvion) {
+            avion = new Avion();
+            tiempoReaparicionAvion = 0;
+        }
+    }
 
     //eliminamos todos los objetos muertos
     misilesEnemigos = misilesEnemigos.filter(m => m.estado);
@@ -246,7 +311,7 @@ function actualizar(dt){
             let ciudad = ciudades[Math.floor(Math.random() * ciudades.length)];
             if (ciudad.estado) {
                 let x = Math.random() * canvas.width;
-                misilesEnemigos.push(new MisilEnemigo(x, 0, ciudad));
+                misilesEnemigos.push(new MisilEnemigo(x, 0, ciudad, velocidadMisilesEnemigos));
                 misilesLanzados++;
                 sndMisilEnemigo.currentTime = 0;
                 sndMisilEnemigo.play();
@@ -332,6 +397,8 @@ function dibujar(){
     explosiones.forEach(e => e.estado && e.dibujar());
     //dibujamos el marciano si existe
     if (marciano && marciano.estado) marciano.dibujar();
+    //dibujamos avion
+    if (avion && avion.estado) avion.dibujar();
 
     //dibujamos game over
     if(gameOver){
@@ -386,6 +453,11 @@ function dibujarPuntero() {
 function activarMarciano(){
     marciano = new Marciano();
 }
+
+function activarAvion(){
+    avion = new Avion();
+}
+
 //inicializamos el juego
 inicializar();
 sndInicio.currentTime = 0;

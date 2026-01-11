@@ -19,8 +19,8 @@ class Marciano extends Entidad{
     }
 
     dibujar(){
-        ctx.fillStyle = "white";
-        ctx.fillRect(this.x, this.y, 20, 10); 
+        //ctx.fillStyle = "white";
+        ctx.drawImage(spriteMarciano, this.x - 16, this.y - 16, 32, 32);
         
     }
 }
