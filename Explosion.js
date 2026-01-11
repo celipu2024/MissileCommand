@@ -35,7 +35,8 @@ class Explosion extends Entidad{
                 if (m.estado) {          // para asegurarnos de que cuenta solo un misil, no varios
                     m.estado = false;
                     misilesDestruidos++; //añadimos un misil para la victoria
-
+                    //doble explosion
+                    explosiones.push(new Explosion(m.x, m.y));
                     sndExplosion.currentTime = 0;
                     sndExplosion.play(); //añadimos sonido
 

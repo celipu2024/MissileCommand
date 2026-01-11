@@ -75,6 +75,13 @@ class MisilJugador extends Entidad{
             //creamos una explosión
             explosiones.push(new Explosion(this.x, this.y));
             this.estado = false;
+            return;
+        }
+        
+        //si sale de la pantalla desactivamos el misil
+        if (this.y < 0 || this.x < 0 || this.x > canvas.width) {
+            this.estado = false;
+            return;
         }
     }
 

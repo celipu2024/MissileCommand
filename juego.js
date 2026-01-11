@@ -100,8 +100,6 @@ let mouseX = canvas.width / 2;
 let mouseY = canvas.height / 2;
 
 
-
-
 canvas.addEventListener("click",function(e){
     if (gameOver) return;
     //obtenemos la posicion del raton en el canvas
@@ -136,7 +134,7 @@ function dispararDesdeCanonMasCercano(x, y){
 
 //creamos las funcion que inicializara todos los elementos
 function inicializar(){
-    misilesDestruidos = 0;
+    //misilesDestruidos = 0;
     marciano = null;
     nivelCompletado = false;
 
@@ -178,11 +176,6 @@ function inicializar(){
         }
     }
 
-    //iniciamos el progreso de dificultad
-    //lanzarMisilEnemigo(); 
-    //lanzarMisilEnemigo();
-
-
     //aplicamos la dificultad del nivel actual
     aplicarDificultadNivel();
 }
@@ -210,27 +203,6 @@ function buclePrincipal(timestamp){
     requestAnimationFrame(buclePrincipal);
 }
 
-//funcion para la dificultad
-/*function lanzarMisilEnemigo(){
-    if(gameOver) return;
-
-    let ciudad = ciudades[Math.floor(Math.random() * ciudades.length)];
-    if(ciudad.estado){
-        let x = Math.random() * canvas.width;
-        misilesEnemigos.push(new MisilEnemigo(x, 0, ciudad, velocidadMisilesEnemigos));
-        contadorMisiles++;
-        sndMisilEnemigo.currentTime = 0;
-        sndMisilEnemigo.play();
-    }
-
-    if(contadorMisiles % 10 === 0 && intervaloMisiles > intervaloMinimo){
-        intervaloMisiles -= 250; //baja progresivo
-    }
-
-    //siguiente misil usa el nuevo intervalo
-    //setTimeout(lanzarMisilEnemigo, intervaloMisiles);
-}*/
-
 //lanzar misil desde marciano
 function lanzarMisilDesdeMarciano(x, y){
     //elegimos una ciudad viva
@@ -257,6 +229,7 @@ function lanzarMisilDesdeAvion(x, y){
 
 
 function actualizar(dt){
+
     //actualizamos los misiles enemigos
     misilesEnemigos.forEach(m => m.actualizar(dt));
     //actualizamos los misiles del jugador
@@ -266,9 +239,9 @@ function actualizar(dt){
         // Actualizamos marciano si existe, o esperamos para reaparecer
     if (marciano && marciano.estado) {
         marciano.actualizar(dt);
-    } else {
+    } else if(nivelActual >= 2){
         tiempoReaparicionMarciano += dt;
-        if (tiempoReaparicionMarciano >= delayMarciano && nivelActual >= 2) {
+        if (tiempoReaparicionMarciano >= delayMarciano) {
             marciano = new Marciano();
             tiempoReaparicionMarciano = 0;
         }
@@ -289,6 +262,20 @@ function actualizar(dt){
     misilesJugador = misilesJugador.filter(m => m.estado);
     explosiones = explosiones.filter(e => e.estado);
 
+    //si nos quedamos sin municiones es gameover
+    const sinMunicion = canones.every(c => c.municion === 0);
+
+    if (!nivelCompletado && sinMunicion && misilesEnemigos.length > 0) {
+        gameOver = true;
+        canones.forEach(c => c.estado = false);
+
+        document.getElementById("contenedor-juego").classList.add("game-over");
+        sndGameOver.currentTime = 0;
+        sndGameOver.play();
+        return;
+    }
+
+
     //comprobamos si quedan ciudades
     if (!ciudades.some(c => c.estado)){
         gameOver = true;
@@ -298,6 +285,7 @@ function actualizar(dt){
         document.getElementById("contenedor-juego").classList.add("game-over");
         sndGameOver.currentTime = 0;
         sndGameOver.play(); //sonido gameover
+        return;
     }
 
     //escalamos la dificultad a partir del nivel 2
@@ -305,25 +293,22 @@ function actualizar(dt){
 
     if (tiempoMisiles >= intervaloMisiles) {
         let ciudadesVivas = ciudades.filter(c => c.estado);
-        // lanzar varios misiles a la vez
-        for (let i = 0; i < misilesPorOleada; i++) {
-            let ciudad = ciudades[Math.floor(Math.random() * ciudades.length)];
-            if (ciudad.estado) {
+        if (ciudadesVivas.length > 0){
+            // lanzar varios misiles a la vez
+            for (let i = 0; i < misilesPorOleada; i++) {
+                let ciudad = ciudadesVivas[Math.floor(Math.random() * ciudadesVivas.length)];
                 let x = Math.random() * canvas.width;
                 misilesEnemigos.push(new MisilEnemigo(x, 0, ciudad, velocidadMisilesEnemigos));
-                misilesLanzados++;
                 sndMisilEnemigo.currentTime = 0;
                 sndMisilEnemigo.play();
             }
-
         }
         tiempoMisiles = 0;
     }
     //comprobamos el avance de nivel
     if (!nivelCompletado && misilesDestruidos >= objetivosPorNivel[nivelActual]) {
         nivelCompletado = true;
-        avanzarNivel();
-        return;
+        setTimeout(avanzarNivel, 1500);
     }
 }
 
@@ -359,7 +344,7 @@ function avanzarNivel() {
     }
 
     //reiniciamos los contadores
-    misilesDestruidos = 0;
+    //misilesDestruidos = 0;
     nivelCompletado = false;
 
     //aumentamos la dificultad para el nuevo nivel
@@ -379,6 +364,24 @@ function dibujar(){
    //hacemos que el fondo se pinte de negro
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    //pantalla de cuando se acaba el juego
+    if (gameOver) {
+        ctx.fillStyle = "white";
+        ctx.textAlign = "center";
+
+        //dibujamos victoria
+        if(victoria){
+            ctx.font = "40px Arial";
+            ctx.fillText("¡HAS GANADO!", canvas.width / 2, canvas.height / 2);
+        //dibujamos victoria
+        }else{
+            ctx.font = "48px Arial";
+            ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2);
+        }
+        return; 
+    }
+    
     //dibujamos el suelo
     const sueloAltura = spriteSuelo.height;
     const sueloY = canvas.height - sueloAltura;
@@ -401,20 +404,15 @@ function dibujar(){
     //dibujamos avion
     if (avion && avion.estado) avion.dibujar();
 
-    //dibujamos game over
-    if(gameOver){
+
+    //nivel completado
+    if (nivelCompletado && !gameOver) {
         ctx.fillStyle = "white";
-        ctx.font = "48px Arial";
+        ctx.font = "32px Arial";
         ctx.textAlign = "center";
-        ctx.fillText("GAME OVER", canvas.width/2, canvas.height/2);
+        ctx.fillText("LEVEL COMPLETED", canvas.width / 2, canvas.height / 2);
     }
 
-    //dibujamos victoria
-    if (victoria) {
-    ctx.fillStyle = "white";
-    ctx.font = "40px Arial";
-    ctx.fillText("¡HAS GANADO!", canvas.width / 2 - 120, canvas.height / 2);
-    }
     //dibujamos marcador
     ctx.fillStyle = "white";
     ctx.font = "18px Arial";

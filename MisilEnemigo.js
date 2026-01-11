@@ -26,6 +26,27 @@ class MisilEnemigo extends Entidad{
         this.x += this.velX * this.velocidad * dt;
         this.y += this.velY * this.velocidad * dt;
 
+            for (let canon of canones) {
+                if (!canon.estado) continue;
+
+                let dx = this.x - canon.x;
+                let dy = this.y - canon.y;
+                let distanciaCuadrada = dx * dx + dy * dy;
+
+                const radioImpacto = 25;
+
+                if (canon.municion > 0 && distanciaCuadrada < radioImpacto * radioImpacto) {
+                    canon.municion = 0; //se queda sin munición
+
+                    explosiones.push(new Explosion(this.x, this.y));
+                    sndExplosion.currentTime = 0;
+                    sndExplosion.play();
+
+                    this.estado = false;
+                    return;
+                }
+            }
+
         const ciudad = this.ciudadDestino;
         if(!ciudad.estado){
             this.estado = false;
@@ -54,7 +75,8 @@ class MisilEnemigo extends Entidad{
             sndCiudad.play();//reproducimos sonido        
             explosiones.push(new Explosion(this.x, this.y)); 
             //destruimos el misil
-            this.estado = false;             
+            this.estado = false; 
+            return;            
         }
     }   
 
