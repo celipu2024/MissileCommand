@@ -38,7 +38,7 @@ let intervaloMisiles = 2000; // empieza fácil
 //let intervaloMinimo = 1000; //limite 1 misil por seg
 //let contadorMisiles = 0;
 let misilesPorOleada = 1;
-//let misilesLanzados = 0;
+let misilesLanzados = 0;
 
 //variables para condicion de victoria
 let misilesDestruidos = 0;
