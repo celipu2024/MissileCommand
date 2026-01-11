@@ -27,11 +27,6 @@ let explosiones = [];
 //instanciamos el marciano
 let marciano = null;
 
-//variables avion
-let avion = null;
-let tiempoReaparicionAvion = 0;
-let delayAvion = 3000; // reaparece cada 3 seg si muere
-
 //variable para controlar el game over
 let gameOver = false;
 const alturaSuelo=32;
