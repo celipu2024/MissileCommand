@@ -4,7 +4,8 @@ class Canon extends Entidad{
         super(x, y);
         //this.x = centro horizontal del cañon
         //this.y = posicion del suelo(parte superior)
-        this.municion = 10; //cantidad de munición inicial
+        this.municionMaxima = 14; //cantidad de munición inicial
+        this.municion = this.municionMaxima;
     }
 
     actualizar(dt){}

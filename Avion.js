@@ -3,6 +3,9 @@ class Avion extends Entidad {
         super(-60, 80); // más alto
         this.velX = 0.12; // más rápido que Marciano
         this.estado = true;
+        this.ancho = 64; // ajusta al sprite real
+        this.alto = 32;
+
     }
 
     actualizar(dt){
@@ -10,8 +13,11 @@ class Avion extends Entidad {
         this.x += this.velX * dt;
 
         // lanza misil enemigo aleatorio
-        if (Math.random() < 0.004){
+        if (Math.random() < 0.002){
             lanzarMisilDesdeAvion(this.x, this.y);
+
+            sndMisilEnemigo.currentTime = 0;
+            sndMisilEnemigo.play();
         }
 
         // si sale de la pantalla, avisa para reaparecer

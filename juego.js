@@ -88,9 +88,9 @@ const objetivosPorNivel = {
 
 // tabla de dificultad
 const dificultadNiveles = {
-    1: { velocidadMisiles: 0.045, intervalo: 2000, misilesPorOleada: 1 },
-    2: { velocidadMisiles: 0.060, intervalo: 1500, misilesPorOleada: 2 },
-    3: { velocidadMisiles: 0.080, intervalo: 1200, misilesPorOleada: 3 }
+    1: { velocidadMisiles: 0.045, intervalo: 1800, misilesPorOleada: 1 },
+    2: { velocidadMisiles: 0.055, intervalo: 2000, misilesPorOleada: 1 },
+    3: { velocidadMisiles: 0.065, intervalo: 1300, misilesPorOleada: 2 }
 };
 
 
@@ -349,6 +349,8 @@ function avanzarNivel() {
     misilesEnemigos = [];
     misilesJugador = [];
     explosiones = [];
+    //recargamos municion
+    canones.forEach(c => c.municion = c.municionMaxima);
 
     if (nivelActual > NIVEL_MAXIMO) {
         // Ya se han completado todos los niveles

@@ -2,14 +2,19 @@ class Marciano extends Entidad{
     constructor(){
         super(-50, 150);
         this.velX = 0.08;
+        this.ancho = 48; // ajusta al sprite real
+        this.alto = 32;
     }
 
     actualizar(dt){
         this.x += this.velX * dt;
 
         //lanza misil elatoriamente
-        if (Math.random() < 0.002){
+        if (Math.random() < 0.001){
             lanzarMisilDesdeMarciano(this.x, this.y);
+
+            sndMisilEnemigo.currentTime = 0;
+            sndMisilEnemigo.play();
         }
         
         //si sale de la pantalla, vuelve a entrar por la izquierda

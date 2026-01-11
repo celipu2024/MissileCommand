@@ -42,6 +42,36 @@ class Explosion extends Entidad{
                 }
             }
         }
+        //colision marciano
+        if (marciano && marciano.estado) {
+            let dx = marciano.x - this.x;
+            let dy = marciano.y - this.y;
+            let distanciaCuad = dx*dx + dy*dy;
+            let colisionMin = (this.radio + marciano.ancho/2) ** 2;
+
+            if (distanciaCuad < colisionMin) {
+                marciano.estado = false;
+                sndExplosion.currentTime = 0;
+                sndExplosion.play();
+            }
+        }
+
+        //colision avion
+        if (avion && avion.estado) {
+            let dx = avion.x - this.x;
+            let dy = avion.y - this.y;
+            let distanciaCuad = dx*dx + dy*dy;
+            let colisionMin = (this.radio + avion.ancho/2) ** 2;
+
+            if (distanciaCuad < colisionMin) {
+                avion.estado = false;
+                sndExplosion.currentTime = 0;
+                sndExplosion.play();
+            }
+        }
+
+
+
     }
 
     dibujar(){

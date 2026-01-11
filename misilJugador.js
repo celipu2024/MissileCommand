@@ -29,6 +29,42 @@ class MisilJugador extends Entidad{
         this.x += this.velX * this.velocidad * dt;
         this.y += this.velY * this.velocidad * dt; 
         
+    //colision marciano
+        if (marciano && marciano.estado) {
+            if (
+                this.x > marciano.x &&
+                this.x < marciano.x + spriteMarciano.width &&
+                this.y > marciano.y &&
+                this.y < marciano.y + spriteMarciano.height
+            ) {
+                marciano.estado = false;
+                this.estado = false;
+                misilesDestruidos++;
+                explosiones.push(new Explosion(this.x, this.y));
+                sndExplosion.currentTime = 0;
+                sndExplosion.play();
+                return;
+            }
+        }
+
+        //colision avion
+        if (avion && avion.estado) {
+            if (
+                this.x > avion.x &&
+                this.x < avion.x + spriteAvion.width &&
+                this.y > avion.y &&
+                this.y < avion.y + spriteAvion.height
+            ) {
+                avion.estado = false;
+                this.estado = false;
+                misilesDestruidos++;
+                explosiones.push(new Explosion(this.x, this.y));
+                sndExplosion.currentTime = 0;
+                sndExplosion.play();
+                return;
+            }
+        }
+
         //comprobamos si el misil ha llegado a su destino
         let dx = this.destinoX - this.x;
         let dy = this.destinoY - this.y;
