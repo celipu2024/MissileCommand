@@ -60,6 +60,7 @@ spriteSuelo.src = "SueloMC.png";
 const spriteCiudad = new Image();
 spriteCiudad.src = "CiudadMC.png";
 
+
 // efectos de sonido
 const sndDisparo = new Audio("disparo.mp3");
 const sndExplosion = new Audio("explosion.mp3");
